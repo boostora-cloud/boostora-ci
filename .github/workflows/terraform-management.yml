@@ -2,7 +2,7 @@ name: "Terraform Management (Reusable)"
 
 # For foundation & identity layers that run in the management account
 # with static AWS credentials. After apply, sends terraform outputs
-# to Jetpack API using GitHub OIDC for authentication.
+# to Boostora API using GitHub OIDC for authentication.
 
 on:
   workflow_call:
@@ -45,7 +45,7 @@ on:
         required: false
         type: string
       callback_url:
-        description: "Jetpack API URL to POST terraform outputs after apply"
+        description: "Boostora API URL to POST terraform outputs after apply"
         required: false
         type: string
         default: ""
@@ -59,9 +59,9 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      JETPACK_APP_ID:
+      BOOSTORA_APP_ID:
         required: false
-      JETPACK_APP_PRIVATE_KEY:
+      BOOSTORA_APP_PRIVATE_KEY:
         required: false
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -77,7 +77,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
-      HAS_APP_ID: ${{ secrets.JETPACK_APP_ID }}
+      HAS_APP_ID: ${{ secrets.BOOSTORA_APP_ID }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
@@ -106,10 +106,10 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: tf-modules-token
         with:
-          app-id: ${{ secrets.JETPACK_APP_ID }}
-          private-key: ${{ secrets.JETPACK_APP_PRIVATE_KEY }}
-          owner: getjetpack
-          repositories: jetpack-tf-modules
+          app-id: ${{ secrets.BOOSTORA_APP_ID }}
+          private-key: ${{ secrets.BOOSTORA_APP_PRIVATE_KEY }}
+          owner: getboostora
+          repositories: boostora-tf-modules
 
       - name: "Configure git for private TF modules"
         if: steps.tf-modules-token.outputs.token != ''
@@ -182,7 +182,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
-      HAS_APP_ID: ${{ secrets.JETPACK_APP_ID }}
+      HAS_APP_ID: ${{ secrets.BOOSTORA_APP_ID }}
     steps:
       - name: "Setup Terraform"
         uses: hashicorp/setup-terraform@v3
@@ -204,10 +204,10 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: tf-modules-token
         with:
-          app-id: ${{ secrets.JETPACK_APP_ID }}
-          private-key: ${{ secrets.JETPACK_APP_PRIVATE_KEY }}
-          owner: getjetpack
-          repositories: jetpack-tf-modules
+          app-id: ${{ secrets.BOOSTORA_APP_ID }}
+          private-key: ${{ secrets.BOOSTORA_APP_PRIVATE_KEY }}
+          owner: getboostora
+          repositories: boostora-tf-modules
 
       - name: "Configure git for private TF modules"
         if: steps.tf-modules-token.outputs.token != ''
@@ -248,7 +248,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
-      HAS_APP_ID: ${{ secrets.JETPACK_APP_ID }}
+      HAS_APP_ID: ${{ secrets.BOOSTORA_APP_ID }}
     steps:
       - name: "Setup Terraform"
         uses: hashicorp/setup-terraform@v3
@@ -276,10 +276,10 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: tf-modules-token
         with:
-          app-id: ${{ secrets.JETPACK_APP_ID }}
-          private-key: ${{ secrets.JETPACK_APP_PRIVATE_KEY }}
-          owner: getjetpack
-          repositories: jetpack-tf-modules
+          app-id: ${{ secrets.BOOSTORA_APP_ID }}
+          private-key: ${{ secrets.BOOSTORA_APP_PRIVATE_KEY }}
+          owner: getboostora
+          repositories: boostora-tf-modules
 
       - name: "Configure git for private TF modules"
         if: steps.tf-modules-token.outputs.token != ''

@@ -26,7 +26,7 @@ name: "🐍 Python Service CI/CD (Reusable)"
 #
 #   jobs:
 #     deploy:
-#       uses: getjetpack/jetpack-ci/.github/workflows/py-ci.yml@main
+#       uses: boostora-cloud/boostora-ci/.github/workflows/py-ci.yml@main
 #       with:
 #         cloud: gcp
 #         organization: testa
@@ -45,8 +45,8 @@ on:
   workflow_call:
     inputs:
       # ── 🏷️ identity ──────────────────────────────────────────────────────
-      organization:                   { description: "Jetpack org slug — first path segment of the image repo (e.g. testa)", required: true, type: string }
-      project_name:                   { description: "Jetpack project slug (e.g. gcp)",                                    required: true, type: string }
+      organization:                   { description: "Boostora org slug — first path segment of the image repo (e.g. testa)", required: true, type: string }
+      project_name:                   { description: "Boostora project slug (e.g. gcp)",                                    required: true, type: string }
       domain:                         { description: "Service domain — groups related services (e.g. users, orders)",     required: true, type: string }
       service_name:                   { description: "Service slug — last path segment of the image repo (e.g. user-svc)", required: true, type: string }
       env:                            { description: "dev | staging | prod",                                              required: true, type: string }
@@ -68,7 +68,7 @@ on:
       # ── ⚓ cluster ──────────────────────────────────────────────────────
       cluster_name:                   { description: "Target Kubernetes cluster name",                                    required: true, type: string }
       cluster_location:               { description: "Region/zone for k8s (EKS/GKE) or resource group (AKS)",             required: true, type: string }
-      helm_type:                      { description: "Chart from getjetpack/jetpack-ci/helms/<type>: app | job",          default: "app", type: string }
+      helm_type:                      { description: "Chart from boostora-cloud/boostora-ci/helms/<type>: app | job",          default: "app", type: string }
       helm_chart_override:            { description: "Optional. Path inside the service repo to a custom chart (wins over helm_type).", default: "", type: string }
       helm_values_file:               { description: "Optional extra values file inside the service repo (passed last so it wins over chart defaults).", default: "", type: string }
       namespace:                      { description: "K8s namespace — defaults to `domain` so all services in the same domain share a namespace", default: "", type: string }
@@ -82,7 +82,7 @@ on:
 
       # ── 🏗️ terraform (service infra) ────────────────────────────────────
       tf_dir:                         { description: "Per-service Terraform directory — apply only runs if files here changed", default: "./infra", type: string }
-      tf_state_bucket:                { description: "AWS/GCP state bucket owned by bootstrap. Jetpack names it {resource_prefix}-{env}-tfstate, which can't be derived from the account/project id — pass it explicitly. Empty falls back to the legacy {account_id}-tfstate / {gcp_project}-tfstate guess.", default: "", type: string }
+      tf_state_bucket:                { description: "AWS/GCP state bucket owned by bootstrap. Boostora names it {resource_prefix}-{env}-tfstate, which can't be derived from the account/project id — pass it explicitly. Empty falls back to the legacy {account_id}-tfstate / {gcp_project}-tfstate guess.", default: "", type: string }
       tf_state_storage_account:       { description: "Azure only — state storage account owned by bootstrap. Empty falls back to {project_name}{env}tfst.", default: "", type: string }
       tf_state_resource_group:        { description: "Azure only — resource group holding the state account. Empty falls back to {project_name}-tfstate-rg.", default: "", type: string }
 
@@ -616,7 +616,7 @@ jobs:
 
       - name: "📝 Compose helm values"
         id: values
-        uses: getjetpack/jetpack-ci/.github/actions/parse-env-schema@main
+        uses: boostora-cloud/boostora-ci/.github/actions/parse-env-schema@v1.1.0
         with:
           organization:     ${{ inputs.organization }}
           project_name:     ${{ inputs.project_name }}
@@ -636,9 +636,9 @@ jobs:
         if: inputs.helm_chart_override == ''
         uses: actions/checkout@v4
         with:
-          repository: getjetpack/jetpack-ci
+          repository: boostora-cloud/boostora-ci
           ref: main
-          path: .jetpack-ci-charts
+          path: .boostora-ci-charts
           sparse-checkout: helms
           sparse-checkout-cone-mode: false
 
@@ -654,7 +654,7 @@ jobs:
             PATH_OUT="${{ inputs.helm_chart_override }}"
             echo "::notice title=📚 Chart::override → $PATH_OUT"
           else
-            PATH_OUT=".jetpack-ci-charts/helms/${{ inputs.helm_type }}"
+            PATH_OUT=".boostora-ci-charts/helms/${{ inputs.helm_type }}"
             echo "::notice title=📚 Chart::library → $PATH_OUT"
           fi
           if [ ! -f "$PATH_OUT/Chart.yaml" ]; then

@@ -1,6 +1,6 @@
-# jetpack-ci — Reusable GitHub Actions workflows
+# boostora-ci — Reusable GitHub Actions workflows
 
-Shared CI/CD pipelines used by every Jetpack-generated repo (foundation, bootstrap, services). Hosted as a separate repo so a single workflow update lands in every consumer.
+Shared CI/CD pipelines used by every Boostora-generated repo (foundation, bootstrap, services). Hosted as a separate repo so a single workflow update lands in every consumer.
 
 ## Workflows
 
@@ -32,7 +32,7 @@ All four service pipelines follow the same skeleton — only the language-setup 
    │   • Decides cloud / env / cluster / image-repo                │
    │   • Calls the reusable per-stack workflow with those inputs   │
    └─────────────────────────────┬─────────────────────────────────┘
-                                 │ uses: getjetpack/jetpack-ci/...
+                                 │ uses: boostora-cloud/boostora-ci/...
                                  ▼
    ┌───────────────────────────────────────────────────────────────┐
    │  Reusable (py-ci.yml / nodejs-ci.yml / java-ci.yml / go-ci.yml)│
@@ -58,7 +58,7 @@ All four service pipelines follow the same skeleton — only the language-setup 
 
 4. **The caller is dumb.** Service repos pass simple scalars (cloud name, region, image repo URL, cluster name) and let the reusable workflow figure out the rest. A service repo never has cloud-specific YAML — it just changes `cloud: gcp` → `cloud: aws` to retarget.
 
-5. **Service Terraform is per-service.** A `./infra/` directory in the service repo creates per-service infra (DB instances, secret manager entries, GCS buckets, …). The pipeline runs `terraform apply` on it before deploying. Bootstrap-layer infra (VPC, cluster, NAT, VPN) is handled separately by the bootstrap repo — see `docs/bootstrap-vs-service-boundary.md` in jetpack.
+5. **Service Terraform is per-service.** A `./infra/` directory in the service repo creates per-service infra (DB instances, secret manager entries, GCS buckets, …). The pipeline runs `terraform apply` on it before deploying. Bootstrap-layer infra (VPC, cluster, NAT, VPN) is handled separately by the bootstrap repo — see `docs/bootstrap-vs-service-boundary.md` in boostora.
 
 ---
 
@@ -79,7 +79,7 @@ permissions:
 
 jobs:
   deploy:
-    uses: getjetpack/jetpack-ci/.github/workflows/py-ci.yml@main
+    uses: boostora-cloud/boostora-ci/.github/workflows/py-ci.yml@main
     with:
       cloud: gcp
       env: dev
@@ -110,9 +110,9 @@ Same skeleton, different cloud.
 
 ---
 
-## How Jetpack generates the caller
+## How Boostora generates the caller
 
-When a user creates a service in Jetpack:
+When a user creates a service in Boostora:
 
 1. The service generator emits the service repo with:
    - Application code + Dockerfile + `helm/` chart
@@ -143,7 +143,7 @@ Swapping the entire project from AWS to GCP requires **no code changes in any se
    - Registry login case
    - Update-kubeconfig case
 2. Add corresponding `*_*` inputs (e.g. `oci_user_ocid`, `oci_tenancy_ocid`, …) to the `workflow_call.inputs` block.
-3. Jetpack's `cloud-labels.ts` registry already has a row for the new cloud — name parity is automatic in diagrams + monitoring.
+3. Boostora's `cloud-labels.ts` registry already has a row for the new cloud — name parity is automatic in diagrams + monitoring.
 
 No service repo changes required — they just start passing `cloud: oracle`.
 
@@ -202,7 +202,7 @@ Reusable steps that the per-stack pipelines (and any caller) drop in directly:
 Usage from any workflow:
 
 ```yaml
-- uses: getjetpack/jetpack-ci/.github/actions/parse-env-schema@main
+- uses: boostora-cloud/boostora-ci/.github/actions/parse-env-schema@v1.1.0
   id: values
   with:
     organization:     testa
@@ -426,7 +426,7 @@ Devs fill the real value via console / `gcloud secrets versions add` / `aws secr
 Reusable Terraform CI workflow. Handles init, validate, format check, plan, apply, destroy via OIDC.
 
 **Features:**
-- Automatic token generation for private TF modules (`getjetpack/jetpack-tf-modules`)
+- Automatic token generation for private TF modules (`getboostora/boostora-tf-modules`)
 - S3/GCS backend configuration via inputs
 - Optional `.tfvars` file support
 - GitHub environment protection (approval gates)

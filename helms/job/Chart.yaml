@@ -1,7 +1,7 @@
 apiVersion: v2
 name: job
 description: |
-  Chart for Jetpack batch workloads. Renders either:
+  Chart for Boostora batch workloads. Renders either:
     • a Kubernetes CronJob (when .Values.schedule is set), or
     • a one-shot Job (when .Values.schedule is empty)
   …plus the same ConfigMap + ExternalSecret + ServiceAccount surface as

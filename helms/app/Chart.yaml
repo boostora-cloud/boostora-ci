@@ -1,7 +1,7 @@
 apiVersion: v2
 name: app
 description: |
-  Generic application chart for long-running Jetpack services.
+  Generic application chart for long-running Boostora services.
   Renders Deployment + Service + ServiceAccount + ConfigMap (literals) +
   one ExternalSecret per unique ClusterSecretStore referenced.
 

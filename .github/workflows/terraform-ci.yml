@@ -48,9 +48,9 @@ on:
         required: false
         type: string
     secrets:
-      JETPACK_APP_ID:
+      BOOSTORA_APP_ID:
         required: false
-      JETPACK_APP_PRIVATE_KEY:
+      BOOSTORA_APP_PRIVATE_KEY:
         required: false
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
       id-token: write
       contents: read
     env:
-      HAS_APP_ID: ${{ secrets.JETPACK_APP_ID }}
+      HAS_APP_ID: ${{ secrets.BOOSTORA_APP_ID }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
@@ -97,10 +97,10 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: tf-modules-token
         with:
-          app-id: ${{ secrets.JETPACK_APP_ID }}
-          private-key: ${{ secrets.JETPACK_APP_PRIVATE_KEY }}
-          owner: getjetpack
-          repositories: jetpack-tf-modules
+          app-id: ${{ secrets.BOOSTORA_APP_ID }}
+          private-key: ${{ secrets.BOOSTORA_APP_PRIVATE_KEY }}
+          owner: getboostora
+          repositories: boostora-tf-modules
 
       - name: "Configure git for private TF modules"
         if: steps.tf-modules-token.outputs.token != ''
@@ -161,7 +161,7 @@ jobs:
       id-token: write
       contents: read
     env:
-      HAS_APP_ID: ${{ secrets.JETPACK_APP_ID }}
+      HAS_APP_ID: ${{ secrets.BOOSTORA_APP_ID }}
     steps:
       - name: "Setup Terraform"
         uses: hashicorp/setup-terraform@v3
@@ -189,10 +189,10 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: tf-modules-token
         with:
-          app-id: ${{ secrets.JETPACK_APP_ID }}
-          private-key: ${{ secrets.JETPACK_APP_PRIVATE_KEY }}
-          owner: getjetpack
-          repositories: jetpack-tf-modules
+          app-id: ${{ secrets.BOOSTORA_APP_ID }}
+          private-key: ${{ secrets.BOOSTORA_APP_PRIVATE_KEY }}
+          owner: getboostora
+          repositories: boostora-tf-modules
 
       - name: "Configure git for private TF modules"
         if: steps.tf-modules-token.outputs.token != ''
@@ -229,7 +229,7 @@ jobs:
       contents: read
     environment: ${{ inputs.environment }}
     env:
-      HAS_APP_ID: ${{ secrets.JETPACK_APP_ID }}
+      HAS_APP_ID: ${{ secrets.BOOSTORA_APP_ID }}
     steps:
       - name: "Setup Terraform"
         uses: hashicorp/setup-terraform@v3
@@ -263,10 +263,10 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: tf-modules-token
         with:
-          app-id: ${{ secrets.JETPACK_APP_ID }}
-          private-key: ${{ secrets.JETPACK_APP_PRIVATE_KEY }}
-          owner: getjetpack
-          repositories: jetpack-tf-modules
+          app-id: ${{ secrets.BOOSTORA_APP_ID }}
+          private-key: ${{ secrets.BOOSTORA_APP_PRIVATE_KEY }}
+          owner: getboostora
+          repositories: boostora-tf-modules
 
       - name: "Configure git for private TF modules"
         if: steps.tf-modules-token.outputs.token != ''
